@@ -1,0 +1,8 @@
+ak: {{ key "bots/prometheus-ksyun-sd/ak" }}
+region: cn-beijing-6
+sk: {{ key "bots/prometheus-ksyun-sd/sk" }}
+targets:
+  - instances:
+      - id: 0e3b8de6-8c8e-4852-9b48-de9e9fa382eb
+        name: wotv
+    namespace: bws

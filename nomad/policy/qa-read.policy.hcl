@@ -1,0 +1,3 @@
+namespace "qa" {
+  policy = "read"
+}

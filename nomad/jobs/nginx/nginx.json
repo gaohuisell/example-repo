@@ -1,0 +1,198 @@
+{
+    "Job": {
+        "Region": "global",
+        "Namespace": null,
+        "ID": "nginx",
+        "Name": "nginx",
+        "Type": "service",
+        "Priority": null,
+        "AllAtOnce": null,
+        "Datacenters": [
+            "dc1"
+        ],
+        "Constraints": null,
+        "Affinities": null,
+        "TaskGroups": [
+            {
+                "Name": "nginx",
+                "Count": null,
+                "Constraints": null,
+                "Affinities": null,
+                "Tasks": [
+                    {
+                        "Name": "nginx",
+                        "Driver": "docker",
+                        "User": "",
+                        "Lifecycle": null,
+                        "Config": {
+                            "args": [
+                                "nginx",
+                                "-c",
+                                "/local/nginx.conf",
+                                "-g",
+                                "daemon off;"
+                            ],
+                            "image": "nginx:1.18.0-alpine",
+                            "network_mode": "host"
+                        },
+                        "Constraints": null,
+                        "Affinities": null,
+                        "Env": null,
+                        "Services": null,
+                        "Resources": {
+                            "CPU": 100,
+                            "Cores": null,
+                            "MemoryMB": 256,
+                            "MemoryMaxMB": null,
+                            "DiskMB": null,
+                            "Networks": null,
+                            "Devices": null,
+                            "IOPS": null
+                        },
+                        "RestartPolicy": null,
+                        "Meta": {
+                            "abc": "abc.shanyong-pc-127.0.0.1-abc.shanyong-pc-127.0.0.1-abc.shanyong-pc-127.0.0.1"
+                        },
+                        "KillTimeout": null,
+                        "LogConfig": null,
+                        "Artifacts": null,
+                        "Vault": null,
+                        "Templates": [
+                            {
+                                "SourcePath": null,
+                                "DestPath": "secrets/environ.txt",
+                                "EmbeddedTmpl": "NOMAD_MYSQL_URL=\"jdbc:mysql://uop-dev-aurora-mysql.cluster-c9ntc7skbu5q.rds.cn-northwest-1.amazonaws.com.cn:3306/club\"\r\nmysql_username=\"club\"\r\nmysql_password=\"{{ key \"mysql/users/club\" }}\"\r\n\r\nkafka_bootstrap_servers=\"kafka.service.consul:9092\"\r\n\r\ncustom_transfer_source_app_id=\"1002\"\r\ncustom_transfer_target_game_id=\"58a2768a-184b-45d7-8e09-d16efcbe3b10\"\r\ncustom_transfer_target_game_name=\"风暴魔域 2\"\r\n\r\nstorm_secret_key=\"f54ee6d5a39700e0bfd8e33ff7bcfc9e\"\r\npromo_secret_key=\"3f8e67d90e6ae283198e0a51580657be\"\r\n\r\nsk = \"234\"\r\n",
+                                "ChangeMode": "restart",
+                                "ChangeSignal": null,
+                                "Splay": 5000000000,
+                                "Perms": "0644",
+                                "LeftDelim": null,
+                                "RightDelim": null,
+                                "Envvars": true,
+                                "VaultGrace": null
+                            },
+                            {
+                                "SourcePath": null,
+                                "DestPath": "local/config/application.properties",
+                                "EmbeddedTmpl": "quarkus.http.host={{ env \"NOMAD_IP_http\" }}\r\nquarkus.http.port={{ env \"NOMAD_PORT_http\" }}\r\nquarkus.grpc.server.host={{ env \"NOMAD_IP_grpc\" }}\r\nquarkus.grpc.server.port={{ env \"NOMAD_PORT_grpc\" }}\r\nquarkus.grpc.clients.account.host=127.0.0.1\r\nquarkus.grpc.clients.account.port=8888\r\nquarkus.grpc.clients.club-sync.host=127.0.0.1\r\nquarkus.grpc.clients.club-sync.port=8888\r\n\r\nquarkus.http.cors=true\r\n\r\nquarkus.swagger-ui.always-include=false\r\n\r\nquarkus.datasource.jdbc.url={{ env \"NOMAD_MYSQL_URL\" }}\r\nquarkus.datasource.username={{ env \"mysql_username\" }}\r\nquarkus.datasource.password={{ env \"mysql_password\" }}\r\n\r\nkafka.bootstrap.servers={{ env \"kafka_bootstrap_servers\" }}\r\n\r\nmp.jwt.verify.publickey={{ key \"hydra/jwk/public\" }}\r\nmp.jwt.verify.issuer={{ key \"hydra/jwk/issuer\" }}\r\n\r\ncustom.transfer.source.app-id={{ env \"custom_transfer_source_app_id\" }}\r\ncustom.transfer.target.game-id={{ env \"custom_transfer_target_game_id\" }}\r\ncustom.transfer.target.game-name={{ env \"custom_transfer_target_game_name\" }}\r\n\r\nstorm.secret.key={{ env \"storm_secret_key\" }}\r\npromo.secret.key={{ env \"promo_secret_key\" }}\r\n\r\nidGenerator.snowflake.work-id={{ env \"NOMAD_ALLOC_INDEX\"}}\r\n",
+                                "ChangeMode": "restart",
+                                "ChangeSignal": null,
+                                "Splay": 5000000000,
+                                "Perms": "0644",
+                                "LeftDelim": null,
+                                "RightDelim": null,
+                                "Envvars": null,
+                                "VaultGrace": null
+                            },
+                            {
+                                "SourcePath": null,
+                                "DestPath": "local/nginx.conf",
+                                "EmbeddedTmpl": "user nginx;\r\nworker_processes  auto;\r\n\r\nerror_log  stderr warn;\r\npid        /tmp/nginx.pid;\r\n\r\nevents {\r\n  worker_connections 1024;\r\n}\r\n\r\nhttp {\r\n  include       /etc/nginx/mime.types;\r\n  default_type  application/octet-stream;\r\n  gzip          on;\r\n\r\n  access_log    /dev/stdout;\r\n\r\n  proxy_set_header Host $http_host;\r\n  proxy_set_header X-Real-IP $remote_addr;\r\n  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\r\n\r\n  # http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout\r\n  proxy_read_timeout 120;\r\n\r\n  add_header Strict-Transport-Security max-age=31536000;\r\n\r\n  # As a WebSocket Proxy\r\n  proxy_http_version 1.1;\r\n  proxy_set_header Connection \"Upgrade\";\r\n  proxy_set_header Upgrade $http_upgrade;\r\n\r\n  proxy_buffering off;\r\n\r\n  client_max_body_size 0;\r\n\r\n  # Return 404 for unrecognized server names\r\n  # https://nginx.org/en/docs/http/request_processing.html\r\n  server {\r\n    listen {{ env \"NOMAD_PORT_http\" }} default_server;\r\n    return 404;\r\n  }\r\n    upstream prometheus {\r\n      server 192.168.166.24:9090;\r\n    }\r\n\r\n    server {\r\n      listen        8090;\r\n      server_name   wotv-dev-prometheus.seayoo.com;\r\n      location / {\r\n        proxy_pass  http://prometheus;\r\n      }\r\n    }\r\n}\r\n",
+                                "ChangeMode": "signal",
+                                "ChangeSignal": "SIGHUP",
+                                "Splay": 5000000000,
+                                "Perms": "0644",
+                                "LeftDelim": null,
+                                "RightDelim": null,
+                                "Envvars": null,
+                                "VaultGrace": null
+                            },
+                            {
+                                "SourcePath": null,
+                                "DestPath": "local/test.conf",
+                                "EmbeddedTmpl": "hello\r\nhello true\r\nwotv-dev-alertmanager.seayoo.com\r\nwotv-dev-traefik.seayoo.com\r\nwotv-dev-grafana.seayoo.com\r\nwotv-dev-manager.seayoo.com\r\nwotv-dev-prometheus.seayoo.com\r\n\r\n}\r\n\r\n{{ with service \"alertmanager\" }}\r\n  upstream alertmanager {  \r\n  {{- range service \"alertmanager\" }}\r\n    server {{ .Address }}:{{ .Port }};\r\n  {{- end }}\r\n  }\r\n  server {\r\n    listen        {{ env \"NOMAD_PORT_http\" }};\r\n    server_name   wotv-dev-alertmanager.seayoo.com;\r\n    location / {\r\n      proxy_pass  http://alertmanager;\r\n    }\r\n  }\r\n{{ end }}\r\n\r\n{{ with service \"api.traefik\" }}\r\n  upstream api.traefik {  \r\n  {{- range service \"api.traefik\" }}\r\n    server {{ .Address }}:{{ .Port }};\r\n  {{- end }}\r\n  }\r\n  server {\r\n    listen        {{ env \"NOMAD_PORT_http\" }};\r\n    server_name   wotv-dev-traefik.seayoo.com;\r\n    location / {\r\n      proxy_pass  http://api.traefik;\r\n    }\r\n  }\r\n{{ end }}\r\n\r\n{{ with service \"grafana\" }}\r\n  upstream grafana {  \r\n  {{- range service \"grafana\" }}\r\n    server {{ .Address }}:{{ .Port }};\r\n  {{- end }}\r\n  }\r\n  server {\r\n    listen        {{ env \"NOMAD_PORT_http\" }};\r\n    server_name   wotv-dev-grafana.seayoo.com;\r\n    location / {\r\n      proxy_pass  http://grafana;\r\n    }\r\n  }\r\n{{ end }}\r\n\r\n{{ with service \"manager\" }}\r\n  upstream manager {  \r\n  {{- range service \"manager\" }}\r\n    server {{ .Address }}:{{ .Port }};\r\n  {{- end }}\r\n  }\r\n  server {\r\n    listen        {{ env \"NOMAD_PORT_http\" }};\r\n    server_name   wotv-dev-manager.seayoo.com;\r\n    location / {\r\n      proxy_pass  http://manager;\r\n    }\r\n  }\r\n{{ end }}\r\n\r\n{{ with service \"prometheus\" }}\r\n  upstream prometheus {  \r\n  {{- range service \"prometheus\" }}\r\n    server {{ .Address }}:{{ .Port }};\r\n  {{- end }}\r\n  }\r\n  server {\r\n    listen        {{ env \"NOMAD_PORT_http\" }};\r\n    server_name   wotv-dev-prometheus.seayoo.com;\r\n    location / {\r\n      proxy_pass  http://prometheus;\r\n    }\r\n  }\r\n{{ end }}\r\n\r\n",
+                                "ChangeMode": "signal",
+                                "ChangeSignal": "SIGHUP",
+                                "Splay": 5000000000,
+                                "Perms": "0644",
+                                "LeftDelim": null,
+                                "RightDelim": null,
+                                "Envvars": null,
+                                "VaultGrace": null
+                            },
+                            {
+                                "SourcePath": null,
+                                "DestPath": "local/unicast_hosts.txt",
+                                "EmbeddedTmpl": "{{- $upstream := service \"elasticsearch\" -}}\r\n{{- range $upstream }}\r\n{{ .Address }}:{{ .Port }}\r\n{{- end }}\r\n\r\n",
+                                "ChangeMode": "noop",
+                                "ChangeSignal": null,
+                                "Splay": 5000000000,
+                                "Perms": "0644",
+                                "LeftDelim": null,
+                                "RightDelim": null,
+                                "Envvars": null,
+                                "VaultGrace": null
+                            }
+                        ],
+                        "DispatchPayload": null,
+                        "VolumeMounts": null,
+                        "Leader": false,
+                        "ShutdownDelay": 0,
+                        "KillSignal": "",
+                        "Kind": "",
+                        "ScalingPolicies": null
+                    }
+                ],
+                "Spreads": null,
+                "Volumes": null,
+                "RestartPolicy": null,
+                "ReschedulePolicy": null,
+                "EphemeralDisk": null,
+                "Update": null,
+                "Migrate": null,
+                "Networks": [
+                    {
+                        "Mode": "",
+                        "Device": "",
+                        "CIDR": "",
+                        "IP": "",
+                        "DNS": null,
+                        "ReservedPorts": [
+                            {
+                                "Label": "http",
+                                "Value": 8080,
+                                "To": 0,
+                                "HostNetwork": ""
+                            }
+                        ],
+                        "DynamicPorts": null,
+                        "Hostname": "",
+                        "MBits": null
+                    }
+                ],
+                "Meta": null,
+                "Services": null,
+                "ShutdownDelay": null,
+                "StopAfterClientDisconnect": null,
+                "Scaling": null,
+                "Consul": null
+            }
+        ],
+        "Update": null,
+        "Multiregion": null,
+        "Spreads": null,
+        "Periodic": null,
+        "ParameterizedJob": null,
+        "Reschedule": null,
+        "Migrate": null,
+        "Meta": null,
+        "ConsulToken": null,
+        "VaultToken": null,
+        "Stop": null,
+        "ParentID": null,
+        "Dispatched": false,
+        "DispatchIdempotencyToken": null,
+        "Payload": null,
+        "ConsulNamespace": null,
+        "VaultNamespace": null,
+        "NomadTokenID": null,
+        "Status": null,
+        "StatusDescription": null,
+        "Stable": null,
+        "Version": null,
+        "SubmitTime": null,
+        "CreateIndex": null,
+        "ModifyIndex": null,
+        "JobModifyIndex": null
+    }
+}

@@ -1,0 +1,3 @@
+namespace "stage" {
+  policy = "read"
+}

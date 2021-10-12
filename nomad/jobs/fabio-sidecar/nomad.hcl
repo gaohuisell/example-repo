@@ -104,12 +104,12 @@ variable "domains" {
   type = map(string)
   default = {
     prometheus = "wotv-dev-prometheus.seayoo.com"
-    grafana = "wotv-dev-grafana.seayoo.com"
+    grafana    = "wotv-dev-grafana.seayoo.com"
   }
 }
 
 variable "consul_service_discovery_name" {
-  type = string
+  type    = string
   default = "elasticsearch"
 }
 
@@ -117,21 +117,21 @@ variable "custer_info" {
   type = list(object(
     {
       name = string
-      ip = string
+      ip   = string
     }
   ))
   default = [
-{
-    name = "shanyong-pc"
-    ip   = "127.0.0.1"
-  },
-  {
-    name = "shanyong-pc"
-    ip   = "127.0.0.1"
-  },
-  {
-    name = "shanyong-pc"
-    ip   = "127.0.0.1"
-  }
+    {
+      name = "shanyong-pc"
+      ip   = "127.0.0.1"
+    },
+    {
+      name = "shanyong-pc"
+      ip   = "127.0.0.1"
+    },
+    {
+      name = "shanyong-pc"
+      ip   = "127.0.0.1"
+    }
   ]
 }

@@ -1,0 +1,67 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'consul'
+    metrics_path: /v1/agent/metrics
+    params:
+      format: ['prometheus']
+    consul_sd_configs:
+      - services: ['consul']
+    relabel_configs:
+      - source_labels: ['__address__']
+        separator: ':'
+        regex: '(.*):(8300)'
+        target_label: '__address__'
+        replacement: '$1:8500'
+  - job_name: 'nomad'
+    metrics_path: /v1/metrics
+    params:
+      format: ['prometheus']
+    consul_sd_configs:
+      - services: ['nomad']
+        tags: ['http']
+  - job_name: 'nomad-client'
+    metrics_path: /v1/metrics
+    params:
+      format: ['prometheus']
+    consul_sd_configs:
+      - services: ['nomad-client']
+        tags: ['http']
+
+  - job_name: 'consul-services'
+    consul_sd_configs:
+      - tags:
+          ["prometheus-metrics"]
+    relabel_configs:
+    - action: replace
+      source_labels: ["__meta_consul_tags"]
+      regex: .*,prometheus_metrics_path=([^,]+),.*
+      replacement: '${1}'
+      target_label: __metrics_path__
+    - action: replace
+      source_labels: ["__meta_consul_tags"]
+      regex: '.*,prometheus_param_([^=]+)=([^,]+),.*'
+      target_label: __param_${1} 
+      replacement: ${2} 
+    - action: replace
+      source_labels:
+      - __meta_consul_dc
+      target_label: consul_dc
+    - action: replace
+      source_labels:
+      - __meta_consul_node
+      target_label: consul_node_name
+    - action: replace
+      source_labels:
+      - __meta_consul_service
+      target_label: consul_service
+    - action: replace
+      source_labels:
+      - __meta_consul_service_id
+      target_label: consul_service_id

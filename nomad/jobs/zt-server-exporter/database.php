@@ -1,0 +1,47 @@
+<?php
+
+return [
+    'fetch' => \PDO::FETCH_ASSOC,
+    'default' => 'app',
+    'connections' => [
+        'app' => [
+            'driver'    => 'mysql',
+            'host'      => "192.168.166.21",
+            'port'      => "13309",
+            'database'  => 'base_app',
+            'username'  => "root",
+            'password'  => "123456",
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'timezone'  => '+08:00',
+            'strict'    => false,
+        ],
+        'bulletangle' => [
+            'driver'    => 'mysql',
+            'host'      => "192.168.166.21",
+            'port'      => "13309",
+            'database'  => 'bulletangle',
+            'username'  => "root",
+            'password'  => "123456",
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'timezone'  => '+08:00',
+            'strict'    => false,
+        ],
+        'bulletangle_slave' => [
+            'driver'    => 'mysql',
+            'host'      => "192.168.166.21",
+            'port'      => "3309",
+            'database'  => 'bulletangle',
+            'username'  => "root",
+            'password'  => "123456",
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'timezone'  => '+08:00',
+            'strict'    => false,
+        ],
+    ],
+];
